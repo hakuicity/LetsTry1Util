@@ -265,7 +265,7 @@
     try {
       await window.hk.syncQuizResult({
         app_id: 'letstry2',
-        level: 'lt2',
+        level: 'unit' + unitId,
         setId: 'unit' + unitId,
         category: actType,
         correct: score,
