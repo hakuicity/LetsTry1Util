@@ -848,7 +848,7 @@ async function saveResultToSupabase(actType, unitId, score, total) {
     // Use the shared platform hk.syncQuizResult — same table/schema as EikenApp + NH6
     await window.hk.syncQuizResult({
       app_id: 'letstry1',
-      level: 'lt1',
+      level: 'unit' + unitId,
       setId: 'unit' + unitId,
       category: actType,
       correct: score,
