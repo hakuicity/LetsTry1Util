@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#E91E63">
+<meta name="description" content="Let's Try 1 — 小学3年生英語学習コンパニオン">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Let's Try 1">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+<link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+<title>Let's Try 1 — 練習サイト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #F4F6F8; --surface: #fff; --surface2: #ECEFF1; --border: #e0e0e0;
+  --text: #212529; --text2: #607D8B; --text3: #90A4AE; --shadow: rgba(0,0,0,.06);
+  --accent: #C2185B; --accent2: #FCE4EC;
+}
+body.dark {
+  --bg: #1A1F23; --surface: #263238; --surface2: #2E3B42; --border: #37474F;
+  --text: #ECEFF1; --text2: #90A4AE; --text3: #546E7A; --shadow: rgba(0,0,0,.3);
+  --accent2: #2D1520;
+}
+html, body { height: 100%; }
+body { font-family: 'Noto Sans JP', 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background .2s, color .2s; }
+.main-col { padding: 14px 14px 60px; max-width: 640px; margin: 0 auto; }
+
+/* ── Header ── */
+.header { text-align: center; padding: 18px 0 12px; }
+.header-icon { display: inline-block; color: #fff; border-radius: 10px; padding: 7px 18px; font-size: 20px; font-weight: 800; letter-spacing: 2px; margin-bottom: 6px; background: #C2185B; }
+.header h1 { font-size: 23px; font-weight: 800; margin: 5px 0 0; }
+.header p { font-size: 13px; color: var(--text3); margin: 3px 0 0; }
+.top-controls { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.top-controls-right { display: flex; gap: 8px; align-items: center; }
+.theme-btn { padding: 8px 11px; border-radius: 8px; border: 2px solid var(--border); background: var(--surface); cursor: pointer; font-size: 16px; color: var(--text2); transition: all .15s; }
+.theme-btn:hover { border-color: var(--text2); }
+.auth-btn { padding: 7px 14px; border-radius: 8px; border: 2px solid #C2185B; background: transparent; cursor: pointer; font-size: 13px; font-weight: 600; color: #C2185B; transition: all .15s; font-family: inherit; }
+.auth-btn:hover { background: var(--accent2); }
+.auth-btn.logged-in { background: #C2185B; color: #fff; border-color: #C2185B; }
+
+/* ── Unit tabs ── */
+.unit-tabs { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 14px; }
+.unit-tab {
+  flex: 1; min-width: 56px; padding: 8px 4px; text-align: center;
+  border: 2px solid var(--border); border-radius: 8px; background: var(--surface);
+  cursor: pointer; font-weight: 700; font-size: 12px; color: var(--text2);
+  transition: all .15s; font-family: inherit;
+}
+.unit-tab.active { color: #fff; border-color: transparent; background: #C2185B; }
+.unit-tab:hover:not(.active) { border-color: #F48FB1; }
+
+/* ── Unit banner ── */
+.unit-banner {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 14px 16px; margin-bottom: 14px; box-shadow: 0 2px 6px var(--shadow);
+  border-left: 4px solid;
+}
+.unit-banner h2 { font-size: 16px; font-weight: 800; margin-bottom: 3px; }
+.unit-banner p { font-size: 13px; color: var(--text2); }
+
+/* ── Activity grid ── */
+.act-grid { display: flex; flex-direction: column; gap: 9px; }
+.act-card {
+  display: flex; align-items: center; gap: 12px; padding: 13px 15px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  cursor: pointer; text-align: left; box-shadow: 0 1px 3px var(--shadow);
+  transition: box-shadow .15s, transform .1s; font-family: inherit; color: var(--text); width: 100%;
+}
+.act-card:hover { box-shadow: 0 3px 10px var(--shadow); transform: translateY(-1px); }
+.act-icon { font-size: 26px; flex-shrink: 0; }
+.act-label { font-size: 15px; font-weight: 700; }
+.act-desc { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.act-badge { margin-left: auto; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 12px; flex-shrink: 0; }
+
+/* ── Section label ── */
+.section-label { font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: .5px; margin: 18px 0 8px; }
+
+/* ── Stats ── */
+.stats-row { display: flex; gap: 10px; margin-bottom: 14px; }
+.stat-card { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px; text-align: center; box-shadow: 0 1px 3px var(--shadow); }
+.stat-num { font-size: 24px; font-weight: 800; color: #C2185B; }
+.stat-lbl { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+/* ── Generic top bar ── */
+.topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.back-btn {
+  display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px;
+  background: none; border: 1.5px solid var(--border); border-radius: 8px;
+  font-size: 13px; font-weight: 600; color: var(--text2); cursor: pointer;
+  font-family: inherit; transition: all .15s;
+}
+.back-btn:hover { border-color: #C2185B; color: #C2185B; background: var(--accent2); }
+.progress-text { font-size: 13px; color: var(--text3); }
+
+/* ── Progress bar ── */
+.progress-wrap { height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; margin-bottom: 4px; }
+.progress-bar { height: 100%; border-radius: 3px; transition: width .3s; background: #C2185B; }
+
+/* ── Question card ── */
+.q-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; box-shadow: 0 2px 6px var(--shadow); }
+.q-badge { display: inline-block; font-size: 11px; font-weight: 700; border-radius: 6px; padding: 3px 10px; margin-bottom: 8px; background: var(--accent2); color: #C2185B; }
+.q-text { font-size: 18px; line-height: 1.65; color: var(--text); font-weight: 600; }
+.q-sub { font-size: 14px; color: var(--text2); margin-top: 6px; line-height: 1.5; }
+
+/* ── Options ── */
+.opts { display: flex; flex-direction: column; gap: 8px; }
+.opt-btn {
+  display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+  border-radius: 10px; border: 2px solid var(--border); cursor: pointer;
+  font-size: 15px; font-weight: 500; text-align: left; background: var(--surface);
+  transition: all .15s; font-family: inherit; color: var(--text);
+}
+.opt-btn:hover:not(.locked) { border-color: #F48FB1; background: var(--surface2); }
+.opt-letter {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 7px; background: var(--surface2);
+  font-weight: 700; font-size: 13px; flex-shrink: 0;
+}
+.opt-btn.correct { background: #E8F5E9; border-color: #2E7D32; color: #1B5E20; }
+.opt-btn.wrong { background: #FFEBEE; border-color: #c62828; color: #b71c1c; }
+.opt-btn.locked { cursor: default; }
+
+/* ── Feedback ── */
+.feedback-row { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; flex-wrap: wrap; gap: 8px; }
+.fb-text { font-size: 18px; }
+.next-btn {
+  padding: 10px 22px; color: #fff; border: none; border-radius: 8px;
+  font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit;
+  background: #C2185B; transition: background .15s;
+}
+.next-btn:hover { background: #880E4F; }
+
+/* ── Hint box ── */
+.hint-box { background: #FFF8E1; border: 1px solid #FFE082; border-radius: 10px; padding: 11px 13px; margin-top: 10px; font-size: 14px; line-height: 1.6; color: #F57F17; }
+body.dark .hint-box { background: #2E2600; border-color: #7C6C00; color: #FFD54F; }
+
+/* ── Score circle ── */
+.review-header { text-align: center; padding: 20px 0 10px; }
+.score-circle { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 120px; height: 120px; border-radius: 50%; border: 5px solid #C2185B; margin-bottom: 10px; }
+.score-pct { font-size: 31px; font-weight: 800; color: #C2185B; }
+.score-lbl { font-size: 13px; color: var(--text3); }
+.grade-text { font-size: 20px; font-weight: 700; }
+
+/* ── Result detail ── */
+.result-list { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; }
+.result-row { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+.result-q { font-size: 13px; font-weight: 600; color: var(--text2); }
+.result-ans { font-size: 14px; margin-top: 3px; }
+
+/* ── Matching activity ── */
+.match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.match-col { display: flex; flex-direction: column; gap: 8px; }
+.match-item {
+  padding: 10px 12px; border-radius: 10px; border: 2px solid var(--border);
+  background: var(--surface); cursor: pointer; font-size: 15px; font-weight: 600;
+  text-align: center; transition: all .15s; font-family: inherit; color: var(--text);
+}
+.match-item:hover:not(.matched):not(.locked) { border-color: #F48FB1; background: var(--surface2); }
+.match-item.selected { border-color: #C2185B; background: var(--accent2); color: #C2185B; }
+.match-item.matched { border-color: #2E7D32; background: #E8F5E9; color: #1B5E20; cursor: default; }
+.match-item.wrong-flash { border-color: #c62828; background: #FFEBEE; }
+
+/* ── Word Arrange ── */
+.word-bank { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; min-height: 44px; padding: 8px; background: var(--surface2); border-radius: 10px; }
+.word-chip {
+  padding: 8px 14px; border-radius: 8px; border: 2px solid var(--border);
+  background: var(--surface); cursor: pointer; font-size: 15px; font-weight: 600;
+  transition: all .15s; font-family: inherit; color: var(--text);
+}
+.word-chip:hover { border-color: #C2185B; background: var(--accent2); }
+.word-chip.used { opacity: 0.3; cursor: default; pointer-events: none; }
+.answer-row { display: flex; flex-wrap: wrap; gap: 8px; min-height: 44px; padding: 8px; background: var(--surface); border: 2px dashed var(--border); border-radius: 10px; margin-bottom: 10px; align-items: center; }
+.answer-row[data-empty="true"]::before { content: "単語をタップして並べよう"; color: var(--text3); font-size: 14px; font-style: italic; }
+.answer-chip {
+  padding: 8px 14px; border-radius: 8px; border: 2px solid #C2185B;
+  background: var(--accent2); cursor: pointer; font-size: 15px; font-weight: 600;
+  color: var(--text); font-family: inherit;
+}
+.answer-chip:hover { background: #F8BBD9; }
+
+/* ── Primary / action btns ── */
+.primary-btn {
+  display: block; width: 100%; padding: 13px; background: #37474F; color: #fff;
+  border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer;
+  margin-top: 14px; font-family: inherit; transition: background .15s;
+}
+.primary-btn:hover { background: #263238; }
+.primary-btn.pink { background: #C2185B; }
+.primary-btn.pink:hover { background: #880E4F; }
+.check-btn {
+  display: block; width: 100%; padding: 13px; background: #C2185B; color: #fff;
+  border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer;
+  margin-top: 10px; font-family: inherit; transition: background .15s;
+}
+.check-btn:hover { background: #880E4F; }
+.check-btn:disabled { background: var(--border); color: var(--text3); cursor: default; }
+
+/* ── Flashcard ── */
+.flashcard-wrap { perspective: 1000px; margin: 20px auto; max-width: 400px; }
+.flashcard {
+  width: 100%; height: 180px; position: relative; transform-style: preserve-3d;
+  transition: transform .5s; cursor: pointer; border-radius: 16px;
+}
+.flashcard.flipped { transform: rotateY(180deg); }
+.fc-face {
+  position: absolute; inset: 0; border-radius: 16px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  backface-visibility: hidden; padding: 20px;
+  border: 2px solid var(--border); box-shadow: 0 4px 16px var(--shadow);
+}
+.fc-front { background: var(--surface); }
+.fc-back { background: var(--accent2); transform: rotateY(180deg); }
+body.dark .fc-back { background: #2D1520; }
+.fc-emoji { font-size: 42px; margin-bottom: 8px; }
+.fc-word { font-size: 22px; font-weight: 800; color: var(--text); }
+.fc-hint { font-size: 13px; color: var(--text3); margin-top: 4px; }
+.fc-translation { font-size: 20px; font-weight: 700; color: #C2185B; }
+.fc-nav { display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 12px; }
+.fc-nav-btn {
+  padding: 8px 18px; border-radius: 8px; border: 2px solid var(--border);
+  background: var(--surface); cursor: pointer; font-size: 14px; font-weight: 600;
+  font-family: inherit; color: var(--text2); transition: all .15s;
+}
+.fc-nav-btn:hover { border-color: #C2185B; color: #C2185B; }
+.fc-counter { font-size: 14px; color: var(--text3); min-width: 60px; text-align: center; }
+
+/* ── Auth Modal ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.modal-box { background: var(--surface); border-radius: 16px; padding: 24px; max-width: 360px; width: 90%; position: relative; box-shadow: 0 8px 32px rgba(0,0,0,.2); }
+.modal-close { position: absolute; top: 12px; right: 14px; background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text3); }
+.modal-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+.modal-sub { font-size: 13px; color: var(--text2); margin-bottom: 16px; }
+.modal-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+.modal-tab { flex: 1; padding: 8px; border-radius: 8px; border: 2px solid var(--border); background: var(--surface); cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit; color: var(--text2); transition: all .15s; }
+.modal-tab.active { background: #C2185B; color: #fff; border-color: #C2185B; }
+.modal-field { margin-bottom: 12px; }
+.modal-field label { display: block; font-size: 12px; font-weight: 700; color: var(--text2); margin-bottom: 5px; }
+.modal-field input { width: 100%; padding: 10px 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 15px; background: var(--surface2); color: var(--text); font-family: inherit; }
+.modal-field input:focus { outline: none; border-color: #C2185B; }
+.modal-submit { display: block; width: 100%; padding: 12px; background: #C2185B; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; margin-top: 8px; }
+.modal-submit:hover { background: #880E4F; }
+.modal-err { background: #FFEBEE; border: 1px solid #FFCDD2; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #c62828; margin-bottom: 12px; }
+.modal-ok { background: #E8F5E9; border: 1px solid #C8E6C9; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #2E7D32; margin-bottom: 12px; }
+.modal-user-info { background: var(--surface2); border-radius: 10px; padding: 14px; margin-bottom: 14px; }
+.modal-user-name { font-size: 16px; font-weight: 700; margin-bottom: 3px; }
+.modal-user-email { font-size: 13px; color: var(--text2); }
+.modal-dashboard-link { display: block; text-align: center; padding: 10px; background: var(--accent2); color: #C2185B; border-radius: 8px; font-size: 13px; font-weight: 700; text-decoration: none; margin-bottom: 10px; }
+.modal-signout { display: block; width: 100%; padding: 10px; background: none; border: 2px solid var(--border); border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; color: var(--text2); }
+.modal-signout:hover { border-color: #c62828; color: #c62828; }
+
+/* ── Result sync banner ── */
+.sync-banner { background: #E8F5E9; border: 1px solid #A5D6A7; border-radius: 10px; padding: 10px 14px; font-size: 13px; color: #2E7D32; margin-top: 12px; display: flex; align-items: center; gap: 8px; }
+.sync-banner.error { background: #FFF8E1; border-color: #FFE082; color: #F57F17; }
+
+.hidden { display: none !important; }
+
+/* ── Footer nav ── */
+.footer-nav { text-align: center; color: var(--text3); font-size: 13px; margin-top: 20px; }
+</style>
+</head>
+<body>
+<div class="main-col" id="app">
+
+  <!-- ══════════════════ HOME ══════════════════ -->
+  <div id="home-screen">
+    <div class="header">
+      <div class="header-icon">Let's Try!</div>
+      <h1>Let's Try 1 練習</h1>
+      <p>Unit 1–9 · 小学校3年生向け · 自主練習ツール</p>
+    </div>
+
+    <div class="top-controls">
+      <div id="stats-mini" class="hidden" style="font-size:13px;color:var(--text2)">⭐ <span id="stats-total">0</span> 問 · ✅ <span id="stats-correct">0</span> 正解</div>
+      <div class="top-controls-right">
+        <button class="auth-btn" id="auth-btn">ログイン</button>
+        <button class="theme-btn" id="theme-btn">🌙</button>
+      </div>
+    </div>
+
+    <div class="unit-tabs" id="unit-tabs">
+      <button class="unit-tab active" data-unit="0">全</button>
+      <button class="unit-tab" data-unit="1">U1</button>
+      <button class="unit-tab" data-unit="2">U2</button>
+      <button class="unit-tab" data-unit="3">U3</button>
+      <button class="unit-tab" data-unit="4">U4</button>
+      <button class="unit-tab" data-unit="5">U5</button>
+      <button class="unit-tab" data-unit="6">U6</button>
+      <button class="unit-tab" data-unit="7">U7</button>
+      <button class="unit-tab" data-unit="8">U8</button>
+      <button class="unit-tab" data-unit="9">U9</button>
+    </div>
+
+    <div id="unit-banner" class="unit-banner hidden">
+      <h2 id="banner-title"></h2>
+      <p id="banner-sub"></p>
+    </div>
+
+    <p class="section-label">🎯 練習メニュー</p>
+    <div class="act-grid" id="act-grid"></div>
+  </div>
+
+  <!-- ══════════════════ VOCAB QUIZ ══════════════════ -->
+  <div id="quiz-screen" class="hidden">
+    <div class="topbar">
+      <button class="back-btn" id="quiz-back">← メニュー</button>
+      <span class="progress-text" id="quiz-prog-text"></span>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="quiz-prog-bar"></div></div>
+    <div class="q-card">
+      <span class="q-badge" id="quiz-badge"></span>
+      <div class="q-text" id="quiz-q"></div>
+      <div class="q-sub" id="quiz-sub"></div>
+    </div>
+    <div class="opts" id="quiz-opts"></div>
+    <div class="hint-box hidden" id="quiz-hint"></div>
+    <div class="feedback-row hidden" id="quiz-feedback">
+      <span class="fb-text" id="quiz-fb-icon"></span>
+      <button class="next-btn" id="quiz-next">次へ →</button>
+    </div>
+    <div style="text-align:center;font-size:13px;color:var(--text3);margin-top:14px;padding-top:10px;border-top:1px solid var(--border)" id="quiz-run-score"></div>
+  </div>
+
+  <!-- ══════════════════ FLASHCARDS ══════════════════ -->
+  <div id="flash-screen" class="hidden">
+    <div class="topbar">
+      <button class="back-btn" id="flash-back">← メニュー</button>
+      <span class="progress-text" id="flash-prog"></span>
+    </div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard">
+        <div class="fc-face fc-front">
+          <div class="fc-emoji" id="fc-emoji"></div>
+          <div class="fc-word" id="fc-word"></div>
+          <div class="fc-hint">タップして日本語を見る</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-word" id="fc-word-back"></div>
+          <div class="fc-translation" id="fc-trans"></div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="fc-nav-btn" id="fc-prev">← 前</button>
+      <span class="fc-counter" id="fc-counter"></span>
+      <button class="fc-nav-btn" id="fc-next">次 →</button>
+    </div>
+    <button class="primary-btn pink" id="fc-shuffle" style="margin-top:16px">🔀 シャッフル</button>
+  </div>
+
+  <!-- ══════════════════ MATCHING ══════════════════ -->
+  <div id="match-screen" class="hidden">
+    <div class="topbar">
+      <button class="back-btn" id="match-back">← メニュー</button>
+      <span class="progress-text" id="match-score-text"></span>
+    </div>
+    <div class="q-card" style="margin-bottom:10px">
+      <div class="q-text" id="match-instructions" style="font-size:15px;"></div>
+    </div>
+    <div class="match-grid">
+      <div class="match-col" id="match-left"></div>
+      <div class="match-col" id="match-right"></div>
+    </div>
+    <div class="hint-box hidden" id="match-result"></div>
+    <button class="primary-btn pink hidden" id="match-next-round">次のラウンド →</button>
+  </div>
+
+  <!-- ══════════════════ SENTENCE BUILD ══════════════════ -->
+  <div id="build-screen" class="hidden">
+    <div class="topbar">
+      <button class="back-btn" id="build-back">← メニュー</button>
+      <span class="progress-text" id="build-prog"></span>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="build-prog-bar"></div></div>
+    <div class="q-card">
+      <span class="q-badge">文を作ろう</span>
+      <div class="q-text" id="build-prompt" style="font-size:15px;color:var(--text2);font-weight:400;margin-bottom:6px;"></div>
+      <div class="q-text" id="build-jp" style="font-size:16px;"></div>
+    </div>
+    <div class="answer-row" id="build-answer" data-empty="true"></div>
+    <div class="word-bank" id="build-bank"></div>
+    <div class="hint-box hidden" id="build-hint"></div>
+    <button class="check-btn" id="build-check" disabled>答え合わせ</button>
+    <div class="feedback-row hidden" id="build-feedback">
+      <span class="fb-text" id="build-fb-icon"></span>
+      <button class="next-btn" id="build-next">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════ REVIEW ══════════════════ -->
+  <div id="review-screen" class="hidden">
+    <div class="review-header">
+      <div class="score-circle">
+        <div class="score-pct" id="rv-pct"></div>
+        <div class="score-lbl">正解率</div>
+      </div>
+      <h2 class="grade-text" id="rv-grade"></h2>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num" id="rv-correct"></div><div class="stat-lbl">正解</div></div>
+      <div class="stat-card"><div class="stat-num" id="rv-wrong"></div><div class="stat-lbl">不正解</div></div>
+      <div class="stat-card"><div class="stat-num" id="rv-total"></div><div class="stat-lbl">合計</div></div>
+    </div>
+    <div id="rv-sync" class="hidden"></div>
+    <div class="result-list" id="rv-list"></div>
+    <button class="primary-btn pink" id="rv-retry">🔄 もう一度</button>
+    <button class="primary-btn" id="rv-menu">メニューに戻る</button>
+  </div>
+
+</div><!-- end main-col -->
+
+<!-- ══════════════════ AUTH MODAL ══════════════════ -->
+<div id="auth-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <button class="modal-close" id="modal-close">×</button>
+    <h2 class="modal-title" id="modal-title">ログイン</h2>
+    <p class="modal-sub" id="modal-sub">成績をクラウドに保存します</p>
+    <div class="modal-err hidden" id="modal-err"></div>
+    <div class="modal-ok hidden" id="modal-ok"></div>
+    <div id="modal-login-form">
+      <div class="modal-tabs">
+        <button class="modal-tab active" data-tab="email" id="tab-email">📧 メール</button>
+        <button class="modal-tab" data-tab="sid" id="tab-sid">🎓 学籍番号</button>
+      </div>
+      <div id="modal-email-form">
+        <div class="modal-field"><label>メールアドレス</label><input type="email" id="m-email" placeholder="example@school.ed.jp"></div>
+        <div class="modal-field"><label>パスワード</label><input type="password" id="m-pass" placeholder="••••••••"></div>
+      </div>
+      <div id="modal-sid-form" style="display:none">
+        <div class="modal-field"><label>学籍番号</label><input type="text" id="m-sid" placeholder="例：S001"></div>
+        <div class="modal-field"><label>パスワード</label><input type="password" id="m-sidpass" placeholder="••••••••"></div>
+      </div>
+      <button class="modal-submit" id="modal-submit">ログイン</button>
+    </div>
+    <div id="modal-loggedin" style="display:none">
+      <div class="modal-user-info">
+        <div class="modal-user-name" id="modal-user-name"></div>
+        <div class="modal-user-email" id="modal-user-email"></div>
+      </div>
+      <a href="https://hakuicity.github.io/site/account/" target="_blank" class="modal-dashboard-link">📊 マイページを見る →</a>
+      <button class="modal-signout" id="modal-signout">ログアウト</button>
+    </div>
+  </div>
+</div>
+
+<script src="supabase-client.js"></script>
+<script>
+// ══════════════════════════════════════════════════════════
+// DATA — Let's Try 1, Units 1–9
+// Verified against teacher's guide (指導書) PDF
+// ══════════════════════════════════════════════════════════
+const UNITS = [
+  null, // index 0 unused
+
+  // ── Unit 1: Hello! ─────────────────────────────────────
+  // Key phrases: Hello/Hi/Goodbye, I'm (name), world greetings
+  // Chant: Hello, (hi) hello, I'm Emily / Let's, let's, let's be friends!
+  {
+    id: 1,
+    title: "Hello!",
+    titleJp: "世界のいろいろなことばであいさつをしよう",
+    color: "#E91E63",
+    activities: ["vocab","flash","match","build"],
+    vocab: [
+      { en:"Hello",        jp:"こんにちは（英語）",   emoji:"👋", hint:"英語の挨拶" },
+      { en:"Hi",           jp:"やあ！",              emoji:"😊", hint:"カジュアルな挨拶" },
+      { en:"Goodbye",      jp:"さようなら",           emoji:"🙋", hint:"別れの挨拶" },
+      { en:"See you",      jp:"またね",               emoji:"👀", hint:"また会う時の言葉" },
+      { en:"I'm Hinata",   jp:"私はヒナタです",       emoji:"🙋", hint:"I'mで名前を言う" },
+      { en:"Guten Tag",    jp:"こんにちは（ドイツ語）", emoji:"🇩🇪", hint:"ドイツ語の挨拶" },
+      { en:"Terre",        jp:"こんにちは（フランス語）", emoji:"🇫🇷", hint:"フランス語の挨拶" },
+      { en:"Jambo",        jp:"こんにちは（スワヒリ語）", emoji:"🇰🇪", hint:"ケニアの挨拶" },
+      { en:"Ni hao",       jp:"こんにちは（中国語）",  emoji:"🇨🇳", hint:"中国語の挨拶" },
+      { en:"Annyong",      jp:"こんにちは（韓国語）",  emoji:"🇰🇷", hint:"韓国語の挨拶" },
+      { en:"Namaste",      jp:"こんにちは（ヒンディー語）", emoji:"🇮🇳", hint:"インドの挨拶" },
+    ],
+    sentences: [
+      { jp:"こんにちは！私はタケルです。", words:["Hello", "I'm", "Takeru"], hint:"Helloで始めて、I'mで名前を言おう" },
+      { jp:"やあ、私はエミリーです。", words:["Hi", "I'm", "Emily"], hint:"Hi + I'm + 名前" },
+      { jp:"さようなら、またね。", words:["Goodbye", "see", "you"], hint:"GoodbyeとSee youは別れの挨拶" },
+      { jp:"こんにちは！友達になろう。", words:["Hello", "let's", "be", "friends"], hint:"Let's be friends! で友達を誘う" },
+    ],
+    matchPairs: [
+      ["Hello","👋 こんにちは（英語）"],["Guten Tag","🇩🇪 ドイツ語"],
+      ["Jambo","🇰🇪 スワヒリ語"],["Ni hao","🇨🇳 中国語"],
+      ["Goodbye","🙋 さようなら"],["See you","👀 またね"],
+    ],
+  },
+
+  // ── Unit 2: How are you? ────────────────────────────────
+  // Key phrases: How are you? / I'm (fine/happy/tired/sad/sleepy/hungry/great)
+  // Songs: Hello Song, Goodbye Song
+  {
+    id: 2,
+    title: "How are you?",
+    titleJp: "ごきげんいかが？気持ちを伝えよう",
+    color: "#9C27B0",
+    activities: ["vocab","flash","match","build"],
+    vocab: [
+      { en:"How are you?",   jp:"調子はどうですか？",   emoji:"❓", hint:"気持ちや体調を聞く" },
+      { en:"I'm fine",       jp:"元気です",             emoji:"😄", hint:"普通に元気な時" },
+      { en:"I'm happy",      jp:"うれしいです",         emoji:"😃", hint:"うれしい気持ち" },
+      { en:"I'm great",      jp:"とても元気です",       emoji:"🤩", hint:"とても良い時" },
+      { en:"I'm good",       jp:"いいです",             emoji:"🙂", hint:"良い状態" },
+      { en:"I'm tired",      jp:"つかれています",       emoji:"😫", hint:"疲れている時" },
+      { en:"I'm sad",        jp:"かなしいです",         emoji:"😢", hint:"悲しい気持ち" },
+      { en:"I'm sleepy",     jp:"ねむいです",           emoji:"😴", hint:"眠い時" },
+      { en:"I'm hungry",     jp:"おなかがすいています", emoji:"🍽️", hint:"お腹がすいた時" },
+      { en:"Thank you",      jp:"ありがとう",           emoji:"🙏", hint:"感謝を伝える" },
+      { en:"Good idea!",     jp:"いい考えです！",       emoji:"💡", hint:"相手の考えを褒める" },
+    ],
+    sentences: [
+      { jp:"調子はどうですか？", words:["How", "are", "you"], hint:"How are you?で気持ちを聞く" },
+      { jp:"元気です、ありがとう。", words:["I'm", "fine", "thank", "you"], hint:"I'm fine, thank you." },
+      { jp:"とても元気です！", words:["I'm", "great", "thank", "you"], hint:"I'm greatで元気を伝える" },
+      { jp:"つかれています。昼ごはんにしましょう。", words:["I'm", "tired", "let's", "have", "lunch"], hint:"I'm tired. Let's have lunch." },
+    ],
+    matchPairs: [
+      ["I'm fine","😄 元気です"],["I'm happy","😃 うれしいです"],["I'm great","🤩 とても元気"],
+      ["I'm tired","😫 つかれています"],["I'm sad","😢 かなしいです"],["I'm sleepy","😴 ねむいです"],
+    ],
+  },
+
+  // ── Unit 3: How many? ───────────────────────────────────
+  // Key phrases: How many ~? / numbers 1–20 / shapes
+  // Song: Let's Sing Ten Steps (1–20)
+  {
+    id: 3,
+    title: "How many?",
+    titleJp: "数を数えよう！1から20までの数の言い方",
+    color: "#FF9800",
+    activities: ["vocab","flash","match","build"],
+    vocab: [
+      { en:"one",       jp:"1（いち）",   emoji:"1️⃣", hint:"数字の1" },
+      { en:"two",       jp:"2（に）",     emoji:"2️⃣", hint:"数字の2" },
+      { en:"three",     jp:"3（さん）",   emoji:"3️⃣", hint:"数字の3" },
+      { en:"four",      jp:"4（し/よん）", emoji:"4️⃣", hint:"数字の4" },
+      { en:"five",      jp:"5（ご）",     emoji:"5️⃣", hint:"数字の5" },
+      { en:"ten",       jp:"10（じゅう）", emoji:"🔟", hint:"数字の10" },
+      { en:"fifteen",   jp:"15（じゅうご）", emoji:"🔢", hint:"数字の15" },
+      { en:"twenty",    jp:"20（にじゅう）", emoji:"🔢", hint:"数字の20" },
+      { en:"How many?", jp:"いくつですか？", emoji:"❓", hint:"数を聞く" },
+      { en:"circle",    jp:"まる（円）",   emoji:"⭕", hint:"丸い形" },
+      { en:"triangle",  jp:"さんかく",    emoji:"🔺", hint:"3つの角がある形" },
+    ],
+    sentences: [
+      { jp:"りんごはいくつですか？", words:["How", "many", "apples"], hint:"How many + もの?で数を聞く" },
+      { jp:"10個です。", words:["Ten"], hint:"数字だけで答えられる" },
+      { jp:"そうですね。", words:["That's", "right"], hint:"That's right. で正解を伝える" },
+      { jp:"1、2、3、4、5、6、7、8、9、10。", words:["One", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"], hint:"Ten Stepsの歌の前半" },
+    ],
+    matchPairs: [
+      ["one","1️⃣ いち"],["two","2️⃣ に"],["three","3️⃣ さん"],
+      ["five","5️⃣ ご"],["ten","🔟 じゅう"],["twenty","🔢 にじゅう"],
+    ],
+  },
+
+  // ── Unit 4: I like blue. ────────────────────────────────
+  // Key phrases: I like (blue). Do you like (blue)?  Yes/No
+  // Colors + sports + food. Chant: I like blue.  Song: Rainbow Song
+  {
+    id: 4,
+    title: "I like blue.",
+    titleJp: "好きな色やものを伝えよう",
+    color: "#2196F3",
+    activities: ["vocab","flash","match","build"],
+    vocab: [
+      { en:"red",      jp:"赤",         emoji:"🔴", hint:"情熱の色" },
+      { en:"blue",     jp:"青",         emoji:"🔵", hint:"空の色" },
+      { en:"yellow",   jp:"黄色",       emoji:"🟡", hint:"太陽の色" },
+      { en:"green",    jp:"緑",         emoji:"🟢", hint:"自然の色" },
+      { en:"orange",   jp:"オレンジ",   emoji:"🟠", hint:"みかんの色" },
+      { en:"pink",     jp:"ピンク",     emoji:"🩷", hint:"桜の色" },
+      { en:"purple",   jp:"紫",         emoji:"🟣", hint:"虹の色" },
+      { en:"white",    jp:"白",         emoji:"⬜", hint:"雪の色" },
+      { en:"black",    jp:"黒",         emoji:"⬛", hint:"夜空の色" },
+      { en:"I like blue",       jp:"青が好きです",          emoji:"💙", hint:"I like + 色" },
+      { en:"Do you like blue?", jp:"青は好きですか？",      emoji:"❓", hint:"Do you like ~?で聞く" },
+    ],
+    sentences: [
+      { jp:"青が好きです。", words:["I", "like", "blue"], hint:"I like + 色で好きな色を言う" },
+      { jp:"青は好きですか？", words:["Do", "you", "like", "blue"], hint:"Do you like ~?で聞く" },
+      { jp:"はい、好きです。", words:["Yes", "I", "do"], hint:"Yes, I do.で答える" },
+      { jp:"いいえ、好きではありません。", words:["No", "I", "don't"], hint:"No, I don't.で答える" },
+    ],
+    matchPairs: [
+      ["red","🔴 赤"],["blue","🔵 青"],["yellow","🟡 黄色"],
+      ["green","🟢 緑"],["pink","🩷 ピンク"],["purple","🟣 紫"],
+    ],
+  },
+
+  // ── Unit 5: What do you like? ──────────────────────────
+  // Key phrases: What do you like? / What (color/food/sport) do you like?
+  // I like (tennis/pizza/strawberries). Chant: What do you like?
+  {
+    id: 5,
+    title: "What do you like?",
+    titleJp: "好きなもの（色・食べ物・スポーツ）を伝えよう",
+    color: "#4CAF50",
+    activities: ["vocab","flash","match","build"],
+    vocab: [
+      { en:"soccer",      jp:"サッカー",       emoji:"⚽", hint:"足でボールを蹴るスポーツ" },
+      { en:"baseball",    jp:"野球",           emoji:"⚾", hint:"バットでボールを打つ" },
+      { en:"dodgeball",   jp:"ドッジボール",   emoji:"🏐", hint:"ボールを当てるスポーツ" },
+      { en:"swimming",    jp:"水泳",           emoji:"🏊", hint:"水の中で泳ぐスポーツ" },
+      { en:"basketball",  jp:"バスケットボール", emoji:"🏀", hint:"バスケットにボールを入れる" },
+      { en:"apple",       jp:"りんご",         emoji:"🍎", hint:"赤い果物" },
+      { en:"strawberry",  jp:"いちご",         emoji:"🍓", hint:"赤い小さい果物" },
+      { en:"orange",      jp:"オレンジ",       emoji:"🍊", hint:"オレンジ色の果物" },
+      { en:"grapes",      jp:"ぶどう",         emoji:"🍇", hint:"紫の果物" },
+      { en:"pizza",       jp:"ピザ",           emoji:"🍕", hint:"イタリア料理" },
+      { en:"What do you like?", jp:"何が好きですか？", emoji:"❓", hint:"好きなものを聞く" },
+    ],
+    sentences: [
+      { jp:"何が好きですか？", words:["What", "do", "you", "like"], hint:"What do you like?で聞く" },
+      { jp:"サッカーが好きです。", words:["I", "like", "soccer"], hint:"I like + スポーツ" },
+      { jp:"何のスポーツが好きですか？", words:["What", "sport", "do", "you", "like"], hint:"What sport do you like?" },
+      { jp:"いちごとオレンジが好きです。", words:["I", "like", "strawberries", "and", "oranges"], hint:"andでつなぐ" },
+    ],
+    matchPairs: [
+      ["soccer","⚽ サッカー"],["baseball","⚾ 野球"],["swimming","🏊 水泳"],
+      ["apple","🍎 りんご"],["strawberry","🍓 いちご"],["pizza","🍕 ピザ"],
+    ],
+  },
+
+  // ── Unit 6: ALPHABET ────────────────────────────────────
+  // Key phrases: The "A" card, please. / Here you are. / Thank you. / You're welcome.
+  // Numbers 21–30. Song: ABC Song
+  {
+    id: 6,
+    title: "ALPHABET",
+    titleJp: "アルファベットの文字を読んだり書いたりしよう",
+    color: "#F44336",
+    activities: ["vocab","flash","match","build"],
+    vocab: [
+      { en:"A",  jp:"エー（Apple・りんご）",     emoji:"🍎", hint:"AはAppleのA" },
+      { en:"B",  jp:"ビー（Book・本）",           emoji:"📚", hint:"BはBookのB" },
+      { en:"C",  jp:"シー（Crayon・クレヨン）",   emoji:"🖍️", hint:"CはCrayonのC" },
+      { en:"D",  jp:"ディー（Drum・ドラム）",     emoji:"🥁", hint:"DはDrumのD" },
+      { en:"E",  jp:"イー（Egg・たまご）",        emoji:"🥚", hint:"EはEggのE" },
+      { en:"F",  jp:"エフ（Fish・魚）",           emoji:"🐟", hint:"FFishのF" },
+      { en:"G",  jp:"ジー（Gorilla・ゴリラ）",    emoji:"🦍", hint:"GはGorillaのG" },
+      { en:"H",  jp:"エイチ（Hat・帽子）",        emoji:"🎩", hint:"HはHatのH" },
+      { en:"The 'A' card, please", jp:"「A」のカードをください", emoji:"🃏", hint:"カードをもらう言い方" },
+      { en:"Here you are",         jp:"どうぞ",              emoji:"🤲", hint:"渡す時の言葉" },
+      { en:"You're welcome",       jp:"どういたしまして",     emoji:"😊", hint:"Thank youの返事" },
+    ],
+    sentences: [
+      { jp:"「A」のカードをください。", words:["The", "A", "card", "please"], hint:"The + 文字 + card, please" },
+      { jp:"どうぞ。", words:["Here", "you", "are"], hint:"Here you are. で渡す" },
+      { jp:"ありがとう。", words:["Thank", "you"], hint:"Thank you. で感謝する" },
+      { jp:"どういたしまして。", words:["You're", "welcome"], hint:"You're welcome. で返事する" },
+    ],
+    matchPairs: [
+      ["A","🍎 Apple"],["B","📚 Book"],["C","🖍️ Crayon"],
+      ["D","🥁 Drum"],["E","🥚 Egg"],["F","🐟 Fish"],
+    ],
+  },
+
+  // ── Unit 7: This is for you. ────────────────────────────
+  // Key phrases: What do you want? / I want a (blue circle). / This is for you. / Thank you.
+  // Shapes + colors combined. Chant: What do you want?
+  {
+    id: 7,
+    title: "This is for you.",
+    titleJp: "形や色を使ってほしいものを伝えよう",
+    color: "#795548",
+    activities: ["vocab","flash","match","build"],
+    vocab: [
+      { en:"circle",    jp:"まる（円）",     emoji:"⭕", hint:"丸い形" },
+      { en:"triangle",  jp:"さんかく",       emoji:"🔺", hint:"3つの角がある形" },
+      { en:"square",    jp:"しかく（正方形）", emoji:"🟦", hint:"4つの角が同じ形" },
+      { en:"rectangle", jp:"ながしかく（長方形）", emoji:"🔲", hint:"長い四角" },
+      { en:"star",      jp:"ほし",           emoji:"⭐", hint:"星の形" },
+      { en:"heart",     jp:"ハート",         emoji:"❤️", hint:"愛の形" },
+      { en:"What do you want?",    jp:"何が欲しいですか？", emoji:"❓", hint:"ほしいものを聞く" },
+      { en:"I want a blue circle", jp:"青いまるが欲しいです", emoji:"🔵", hint:"色 + 形で言う" },
+      { en:"This is for you",      jp:"これはあなたへです", emoji:"🎁", hint:"プレゼントを渡す時" },
+      { en:"How many?",            jp:"いくつですか？",     emoji:"🔢", hint:"数を聞く" },
+      { en:"Two, please",          jp:"2つください",        emoji:"✌️", hint:"数を言って頼む" },
+    ],
+    sentences: [
+      { jp:"何が欲しいですか？", words:["What", "do", "you", "want"], hint:"What do you want?" },
+      { jp:"青いまるが欲しいです。", words:["I", "want", "a", "blue", "circle", "please"], hint:"I want a + 色 + 形 + please" },
+      { jp:"これはあなたへです。", words:["This", "is", "for", "you"], hint:"This is for you. でプレゼントを渡す" },
+      { jp:"ありがとう。", words:["Thank", "you"], hint:"Thank you. でお礼を言う" },
+    ],
+    matchPairs: [
+      ["circle","⭕ まる"],["triangle","🔺 さんかく"],["square","🟦 しかく"],
+      ["star","⭐ ほし"],["heart","❤️ ハート"],["rectangle","🔲 ながしかく"],
+    ],
+  },
+
+  // ── Unit 8: What's this? ────────────────────────────────
+  // Key phrases: What's this? / It's a (elephant). / Hint, please. / It's (blue/big/small)
+  // Animals, nature. Chant: What's this?
+  {
+    id: 8,
+    title: "What's this?",
+    titleJp: "ヒントを聞いて何かを当てよう",
+    color: "#00BCD4",
+    activities: ["vocab","flash","match","build"],
+    vocab: [
+      { en:"elephant",  jp:"ぞう",       emoji:"🐘", hint:"大きくて鼻が長い動物" },
+      { en:"horse",     jp:"うま",       emoji:"🐴", hint:"馬に乗る" },
+      { en:"spider",    jp:"くも",       emoji:"🕷️", hint:"8本足の生き物" },
+      { en:"gorilla",   jp:"ゴリラ",     emoji:"🦍", hint:"大きなサルの仲間" },
+      { en:"monkey",    jp:"さる",       emoji:"🐒", hint:"木に登る動物" },
+      { en:"tiger",     jp:"とら",       emoji:"🐯", hint:"しまもようの大型ネコ" },
+      { en:"What's this?",   jp:"これは何ですか？",   emoji:"❓", hint:"物や動物を当てる" },
+      { en:"It's an elephant", jp:"ぞうです",         emoji:"🐘", hint:"It's a/an + 名前" },
+      { en:"Hint, please",   jp:"ヒントをください",   emoji:"💡", hint:"ヒントを求める言葉" },
+      { en:"It's big",       jp:"大きいです",         emoji:"🔆", hint:"大きさを表すヒント" },
+      { en:"That's right",   jp:"その通りです",       emoji:"✅", hint:"正解の時の言葉" },
+    ],
+    sentences: [
+      { jp:"これは何ですか？", words:["What's", "this"], hint:"What's this?で当てる" },
+      { jp:"ヒントをください。", words:["Hint", "please"], hint:"Hint, please. でヒントを求める" },
+      { jp:"ぞうです。", words:["It's", "an", "elephant"], hint:"It's a/an + 動物名" },
+      { jp:"その通りです！", words:["That's", "right"], hint:"That's right! で正解を伝える" },
+    ],
+    matchPairs: [
+      ["elephant","🐘 ぞう"],["horse","🐴 うま"],["spider","🕷️ くも"],
+      ["gorilla","🦍 ゴリラ"],["monkey","🐒 さる"],["tiger","🐯 とら"],
+    ],
+  },
+
+  // ── Unit 9: Who are you? ────────────────────────────────
+  // Key phrases: Who are you? / I'm a (dog). / Are you a (dog)? / Yes/No I am/I'm not
+  // Animals, body features. Chant: Knees and Toes
+  {
+    id: 9,
+    title: "Who are you?",
+    titleJp: "なりきりゲームをしよう！動物やものになりきる",
+    color: "#FF5722",
+    activities: ["vocab","flash","match","build"],
+    vocab: [
+      { en:"dog",     jp:"いぬ",           emoji:"🐶", hint:"わんわんと鳴く動物" },
+      { en:"cat",     jp:"ねこ",           emoji:"🐱", hint:"にゃあと鳴く動物" },
+      { en:"cow",     jp:"うし",           emoji:"🐄", hint:"もーと鳴く動物" },
+      { en:"rabbit",  jp:"うさぎ",         emoji:"🐰", hint:"耳が長い動物" },
+      { en:"snake",   jp:"へび",           emoji:"🐍", hint:"長くてするする動く動物" },
+      { en:"sheep",   jp:"ひつじ",         emoji:"🐑", hint:"もこもこの動物" },
+      { en:"Who are you?",    jp:"あなたは誰ですか？", emoji:"❓", hint:"なりきりゲームで使う" },
+      { en:"I'm a dog",       jp:"私はいぬです",       emoji:"🐶", hint:"I'm a + 動物" },
+      { en:"Are you a dog?",  jp:"あなたはいぬですか？", emoji:"❓", hint:"当てる時の質問" },
+      { en:"Yes, I am",       jp:"はい、そうです",     emoji:"✅", hint:"Yes, I am. で答える" },
+      { en:"No, I'm not",     jp:"いいえ、違います",   emoji:"❌", hint:"No, I'm not. で答える" },
+    ],
+    sentences: [
+      { jp:"あなたは誰ですか？", words:["Who", "are", "you"], hint:"Who are you?でなりきりゲーム" },
+      { jp:"私はいぬです。", words:["I'm", "a", "dog"], hint:"I'm a + 動物でなりきる" },
+      { jp:"あなたはうさぎですか？", words:["Are", "you", "a", "rabbit"], hint:"Are you a ~?で当てる" },
+      { jp:"はい、そうです。", words:["Yes", "I", "am"], hint:"Yes, I am.で答える" },
+    ],
+    matchPairs: [
+      ["dog","🐶 いぬ"],["cat","🐱 ねこ"],["cow","🐄 うし"],
+      ["rabbit","🐰 うさぎ"],["snake","🐍 へび"],["sheep","🐑 ひつじ"],
+    ],
+  },
+];
+
+const ACTIVITY_DEFS = {
+  vocab: { icon:"📝", label:"単語クイズ",     desc:"選択問題で単語を練習" },
+  flash: { icon:"🃏", label:"フラッシュカード", desc:"単語カードをめくって覚える" },
+  match: { icon:"🔗", label:"マッチング",      desc:"英語と日本語を結びつける" },
+  build: { icon:"🧩", label:"文を作ろう",      desc:"単語を並べて文を完成させる" },
+};
+
+// ══════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════
+let currentUnit = 0;
+let currentActivity = null;
+let currentUnitData = null;
+
+let qItems = [], qIdx = 0, qScore = 0, qResults = [];
+let fcItems = [], fcIdx = 0;
+let matchSelected = null, matchScore = 0, matchTotal = 0;
+let buildItems = [], buildIdx = 0, buildScore = 0;
+let buildAnswer = [], buildBank = [];
+
+// ══════════════════════════════════════════════════════════
+// THEME
+// ══════════════════════════════════════════════════════════
+const themeBtn = document.getElementById("theme-btn");
+const savedTheme = localStorage.getItem("lt1-theme");
+if (savedTheme === "dark") document.body.classList.add("dark");
+themeBtn.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+themeBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  themeBtn.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+  localStorage.setItem("lt1-theme", document.body.classList.contains("dark") ? "dark" : "light");
+});
+
+// ══════════════════════════════════════════════════════════
+// SCREENS
+// ══════════════════════════════════════════════════════════
+const screens = ["home-screen","quiz-screen","flash-screen","match-screen","build-screen","review-screen"];
+function showScreen(id) {
+  screens.forEach(s => document.getElementById(s).classList.toggle("hidden", s !== id));
+}
+
+// ══════════════════════════════════════════════════════════
+// AUTH / SUPABASE
+// ══════════════════════════════════════════════════════════
+let currentUser = null;
+
+function updateAuthUI() {
+  const btn = document.getElementById("auth-btn");
+  const statsMini = document.getElementById("stats-mini");
+  if (currentUser) {
+    btn.textContent = currentUser.display_name || currentUser.email || "ログイン中";
+    btn.classList.add("logged-in");
+    statsMini.classList.remove("hidden");
+    loadUserStats();
+  } else {
+    btn.textContent = "ログイン";
+    btn.classList.remove("logged-in");
+    statsMini.classList.add("hidden");
+  }
+}
+
+async function loadUserStats() {
+  if (!currentUser || !window.hk) return;
+  try {
+    const results = await window.hk.fetchMyQuizResults();
+    const lt1 = results.filter(r => r.app_id === 'letstry1');
+    if (lt1.length > 0) {
+      const totalQ = lt1.reduce((a, b) => a + (b.total || 0), 0);
+      const totalC = lt1.reduce((a, b) => a + (b.correct || 0), 0);
+      document.getElementById("stats-total").textContent = totalQ;
+      document.getElementById("stats-correct").textContent = totalC;
+    }
+  } catch(e) { /* no-op */ }
+}
+
+async function saveResultToSupabase(actType, unitId, score, total) {
+  if (!currentUser || !window.hk) return null;
+  try {
+    // Use the shared platform hk.syncQuizResult — same table/schema as EikenApp + NH6
+    await window.hk.syncQuizResult({
+      app_id: 'letstry1',
+      level: 'lt1',
+      setId: 'unit' + unitId,
+      category: actType,
+      correct: score,
+      total: total
+    });
+    return true;
+  } catch(e) {
+    console.warn("[LT1] Supabase save failed:", e.message);
+    return false;
+  }
+}
+
+// Auth modal
+document.getElementById("auth-btn").addEventListener("click", () => openAuthModal());
+document.getElementById("modal-close").addEventListener("click", () => closeAuthModal());
+document.getElementById("auth-modal").addEventListener("click", e => {
+  if (e.target === document.getElementById("auth-modal")) closeAuthModal();
+});
+
+function openAuthModal() {
+  const modal = document.getElementById("auth-modal");
+  modal.classList.remove("hidden");
+  if (currentUser) {
+    document.getElementById("modal-login-form").style.display = "none";
+    document.getElementById("modal-loggedin").style.display = "block";
+    document.getElementById("modal-user-name").textContent = currentUser.display_name || "ユーザー";
+    document.getElementById("modal-user-email").textContent = currentUser.email || "";
+  } else {
+    document.getElementById("modal-login-form").style.display = "block";
+    document.getElementById("modal-loggedin").style.display = "none";
+  }
+}
+function closeAuthModal() {
+  document.getElementById("auth-modal").classList.add("hidden");
+  document.getElementById("modal-err").classList.add("hidden");
+  document.getElementById("modal-ok").classList.add("hidden");
+}
+
+// Tab switching
+document.getElementById("tab-email").addEventListener("click", () => {
+  document.getElementById("tab-email").classList.add("active");
+  document.getElementById("tab-sid").classList.remove("active");
+  document.getElementById("modal-email-form").style.display = "block";
+  document.getElementById("modal-sid-form").style.display = "none";
+});
+document.getElementById("tab-sid").addEventListener("click", () => {
+  document.getElementById("tab-sid").classList.add("active");
+  document.getElementById("tab-email").classList.remove("active");
+  document.getElementById("modal-email-form").style.display = "none";
+  document.getElementById("modal-sid-form").style.display = "block";
+});
+
+document.getElementById("modal-submit").addEventListener("click", async () => {
+  const errEl = document.getElementById("modal-err");
+  const okEl = document.getElementById("modal-ok");
+  errEl.classList.add("hidden");
+  okEl.classList.add("hidden");
+
+  if (!window.hk) {
+    errEl.textContent = "接続中です。少々お待ちください。";
+    errEl.classList.remove("hidden");
+    return;
+  }
+
+  const isSid = document.getElementById("tab-sid").classList.contains("active");
+  const submitBtn = document.getElementById("modal-submit");
+  submitBtn.textContent = "ログイン中...";
+
+  try {
+    let data;
+    if (isSid) {
+      const sid = document.getElementById("m-sid").value.trim();
+      const password = document.getElementById("m-sidpass").value;
+      if (!sid) throw new Error("学籍番号を入力してください。");
+      if (!password) throw new Error("パスワードを入力してください。");
+      // Use the platform hk.signInWithStudentId (calls get_student_auth_email RPC)
+      data = await window.hk.signInWithStudentId(sid, password);
+    } else {
+      const email = document.getElementById("m-email").value.trim();
+      const password = document.getElementById("m-pass").value;
+      if (!email) throw new Error("メールアドレスを入力してください。");
+      if (!password) throw new Error("パスワードを入力してください。");
+      data = await window.hk.signIn(email, password);
+    }
+
+    const user = data.user || data.session?.user;
+    const profile = await window.hk.getProfile(user.id);
+    currentUser = {
+      id: user.id,
+      email: user.email,
+      display_name: profile?.display_name || user.email,
+      role: profile?.role || "student"
+    };
+    updateAuthUI();
+    closeAuthModal();
+  } catch(e) {
+    errEl.textContent = e.message || "ログインに失敗しました。";
+    errEl.classList.remove("hidden");
+  } finally {
+    submitBtn.textContent = "ログイン";
+  }
+});
+
+document.getElementById("modal-signout").addEventListener("click", async () => {
+  if (window.hk) await window.hk.signOut().catch(() => {});
+  currentUser = null;
+  updateAuthUI();
+  closeAuthModal();
+});
+
+// Restore session on load using hk.onAuthChange
+(function () {
+  function tryRestore() {
+    if (!window.hk) { setTimeout(tryRestore, 200); return; }
+    window.hk.onAuthChange(async (user) => {
+      if (user) {
+        const profile = await window.hk.getProfile(user.id);
+        currentUser = {
+          id: user.id,
+          email: user.email,
+          display_name: profile?.display_name || user.email,
+          role: profile?.role || "student"
+        };
+      } else {
+        currentUser = null;
+      }
+      updateAuthUI();
+    });
+  }
+  tryRestore();
+})();
+
+// ══════════════════════════════════════════════════════════
+// HOME SCREEN
+// ══════════════════════════════════════════════════════════
+document.getElementById("unit-tabs").addEventListener("click", e => {
+  const tab = e.target.closest(".unit-tab");
+  if (!tab) return;
+  currentUnit = parseInt(tab.dataset.unit);
+  document.querySelectorAll(".unit-tab").forEach(t => t.classList.remove("active"));
+  tab.classList.add("active");
+  renderHome();
+});
+
+function getUnitsToShow() {
+  if (currentUnit === 0) return UNITS.filter(Boolean);
+  return [UNITS[currentUnit]].filter(Boolean);
+}
+
+function renderHome() {
+  const units = getUnitsToShow();
+  const banner = document.getElementById("unit-banner");
+  if (currentUnit !== 0 && units.length) {
+    const u = units[0];
+    banner.classList.remove("hidden");
+    banner.style.borderColor = u.color;
+    document.getElementById("banner-title").textContent = `Unit ${u.id}: ${u.title}`;
+    document.getElementById("banner-title").style.color = u.color;
+    document.getElementById("banner-sub").textContent = u.titleJp;
+  } else {
+    banner.classList.add("hidden");
+  }
+
+  const grid = document.getElementById("act-grid");
+  grid.innerHTML = "";
+
+  if (currentUnit === 0) {
+    Object.entries(ACTIVITY_DEFS).forEach(([key, def]) => {
+      const unitCount = UNITS.filter(Boolean).filter(u => u.activities.includes(key)).length;
+      const btn = document.createElement("button");
+      btn.className = "act-card";
+      btn.innerHTML = `<span class="act-icon">${def.icon}</span><div><div class="act-label">${def.label}</div><div class="act-desc">${def.desc}</div></div><span class="act-badge" style="background:var(--accent2);color:#C2185B">${unitCount} Units</span>`;
+      btn.addEventListener("click", () => launchActivity(key, null));
+      grid.appendChild(btn);
+    });
+  } else {
+    const u = units[0];
+    u.activities.forEach(key => {
+      const def = ACTIVITY_DEFS[key];
+      const count = key === "build" ? u.sentences.length : key === "match" ? u.matchPairs.length : u.vocab.length;
+      const btn = document.createElement("button");
+      btn.className = "act-card";
+      btn.innerHTML = `<span class="act-icon">${def.icon}</span><div><div class="act-label">${def.label}</div><div class="act-desc">${def.desc}</div></div><span class="act-badge" style="background:var(--accent2);color:#C2185B">${count}問</span>`;
+      btn.addEventListener("click", () => launchActivity(key, u));
+      grid.appendChild(btn);
+    });
+  }
+}
+
+function launchActivity(type, unitData) {
+  currentActivity = type;
+  currentUnitData = unitData;
+  if (type === "vocab")  startQuiz(unitData);
+  if (type === "flash")  startFlash(unitData);
+  if (type === "match")  startMatch(unitData);
+  if (type === "build")  startBuild(unitData);
+}
+
+// ══════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ══════════════════════════════════════════════════════════
+// VOCAB QUIZ
+// ══════════════════════════════════════════════════════════
+function buildQuizItems(unitData) {
+  const allVocab = unitData
+    ? unitData.vocab.map(v => ({...v, unit: unitData.id, unitTitle: unitData.title, unitColor: unitData.color}))
+    : UNITS.filter(Boolean).flatMap(u => u.vocab.map(v => ({...v, unit: u.id, unitTitle: u.title, unitColor: u.color})));
+  return shuffle(allVocab).slice(0, Math.min(15, allVocab.length)).map(item => {
+    const pool = UNITS.filter(Boolean).flatMap(u => u.vocab).filter(v => v.jp !== item.jp);
+    const distractors = shuffle(pool).slice(0, 3).map(v => v.jp);
+    const choices = shuffle([item.jp, ...distractors]);
+    return { ...item, choices, correct: item.jp };
+  });
+}
+
+function startQuiz(unitData) {
+  qItems = buildQuizItems(unitData);
+  qIdx = 0; qScore = 0; qResults = [];
+  renderQuizQ();
+  showScreen("quiz-screen");
+}
+
+function renderQuizQ() {
+  const item = qItems[qIdx];
+  const total = qItems.length;
+  document.getElementById("quiz-badge").textContent = `Unit ${item.unit} · ${item.unitTitle}`;
+  document.getElementById("quiz-badge").style.background = item.unitColor + "22";
+  document.getElementById("quiz-badge").style.color = item.unitColor;
+  document.getElementById("quiz-q").textContent = `${item.emoji} ${item.en}`;
+  document.getElementById("quiz-sub").textContent = item.hint;
+  document.getElementById("quiz-prog-text").textContent = `${qIdx + 1} / ${total}`;
+  document.getElementById("quiz-prog-bar").style.width = `${(qIdx / total) * 100}%`;
+  document.getElementById("quiz-hint").classList.add("hidden");
+  document.getElementById("quiz-feedback").classList.add("hidden");
+  document.getElementById("quiz-run-score").textContent = `現在の成績: ${qScore} / ${qIdx}`;
+  const opts = document.getElementById("quiz-opts");
+  opts.innerHTML = "";
+  ["A","B","C","D"].forEach((letter, i) => {
+    const btn = document.createElement("button");
+    btn.className = "opt-btn";
+    btn.innerHTML = `<span class="opt-letter">${letter}</span> ${item.choices[i]}`;
+    btn.addEventListener("click", () => chooseQuizOpt(btn, item.choices[i], item));
+    opts.appendChild(btn);
+  });
+}
+
+function chooseQuizOpt(btn, choice, item) {
+  const correct = choice === item.correct;
+  document.querySelectorAll(".opt-btn").forEach(b => {
+    b.classList.add("locked");
+    if (b.textContent.trim().slice(1).trim() === item.correct) b.classList.add("correct");
+  });
+  if (!correct) btn.classList.add("wrong");
+  if (correct) qScore++;
+  qResults.push({ item, correct, chosen: choice });
+  document.getElementById("quiz-hint").textContent = `💡 ${item.hint}`;
+  document.getElementById("quiz-hint").classList.remove("hidden");
+  document.getElementById("quiz-fb-icon").textContent = correct ? "⭕ 正解！" : "❌ 不正解";
+  document.getElementById("quiz-feedback").classList.remove("hidden");
+}
+
+document.getElementById("quiz-next").addEventListener("click", () => {
+  qIdx++;
+  if (qIdx >= qItems.length) showReview("quiz");
+  else renderQuizQ();
+});
+document.getElementById("quiz-back").addEventListener("click", () => showScreen("home-screen"));
+
+// ══════════════════════════════════════════════════════════
+// FLASHCARDS
+// ══════════════════════════════════════════════════════════
+function startFlash(unitData) {
+  fcItems = unitData ? [...unitData.vocab] : shuffle(UNITS.filter(Boolean).flatMap(u => u.vocab));
+  fcIdx = 0;
+  renderFlash();
+  showScreen("flash-screen");
+}
+function renderFlash() {
+  const card = document.getElementById("flashcard");
+  card.classList.remove("flipped");
+  const item = fcItems[fcIdx];
+  document.getElementById("fc-emoji").textContent = item.emoji;
+  document.getElementById("fc-word").textContent = item.en;
+  document.getElementById("fc-word-back").textContent = item.en;
+  document.getElementById("fc-trans").textContent = item.jp;
+  document.getElementById("fc-counter").textContent = `${fcIdx + 1} / ${fcItems.length}`;
+  document.getElementById("flash-prog").textContent = `${fcIdx + 1} / ${fcItems.length}`;
+}
+document.getElementById("flashcard").addEventListener("click", () => document.getElementById("flashcard").classList.toggle("flipped"));
+document.getElementById("fc-prev").addEventListener("click", () => { fcIdx = (fcIdx - 1 + fcItems.length) % fcItems.length; renderFlash(); });
+document.getElementById("fc-next").addEventListener("click", () => { fcIdx = (fcIdx + 1) % fcItems.length; renderFlash(); });
+document.getElementById("fc-shuffle").addEventListener("click", () => { fcItems = shuffle([...fcItems]); fcIdx = 0; renderFlash(); });
+document.getElementById("flash-back").addEventListener("click", () => showScreen("home-screen"));
+
+// ══════════════════════════════════════════════════════════
+// MATCHING
+// ══════════════════════════════════════════════════════════
+function startMatch(unitData) {
+  matchScore = 0; matchTotal = 0; matchSelected = null;
+  const pairs = unitData ? unitData.matchPairs : UNITS.filter(Boolean).flatMap(u => u.matchPairs);
+  const selectedPairs = shuffle(pairs).slice(0, 6);
+  matchTotal = selectedPairs.length;
+  renderMatchRound(selectedPairs);
+  showScreen("match-screen");
+}
+
+function renderMatchRound(pairs) {
+  matchSelected = null;
+  const lefts = shuffle(pairs.map(p => p[0]));
+  const rights = shuffle(pairs.map(p => p[1]));
+  const pairMap = Object.fromEntries(pairs.map(p => [p[0], p[1]]));
+  document.getElementById("match-instructions").textContent = "英語と日本語を結びつけよう！";
+  document.getElementById("match-score-text").textContent = `${matchScore} / ${matchTotal}`;
+  document.getElementById("match-result").classList.add("hidden");
+  document.getElementById("match-next-round").classList.add("hidden");
+  const leftCol = document.getElementById("match-left");
+  const rightCol = document.getElementById("match-right");
+  leftCol.innerHTML = ""; rightCol.innerHTML = "";
+  let matched = 0;
+
+  function makeItem(text, side) {
+    const el = document.createElement("button");
+    el.className = "match-item";
+    el.textContent = text;
+    el.dataset.side = side;
+    el.dataset.val = text;
+    el.addEventListener("click", () => {
+      if (el.classList.contains("matched") || el.classList.contains("locked")) return;
+      if (matchSelected && matchSelected.el === el) {
+        el.classList.remove("selected");
+        matchSelected = null;
+        return;
+      }
+      if (matchSelected && matchSelected.side === side) {
+        matchSelected.el.classList.remove("selected");
+        matchSelected = { el, side, val: text };
+        el.classList.add("selected");
+        return;
+      }
+      if (!matchSelected) {
+        matchSelected = { el, side, val: text };
+        el.classList.add("selected");
+      } else {
+        // Check match
+        const leftVal  = side === "L" ? text : matchSelected.val;
+        const rightVal = side === "R" ? text : matchSelected.val;
+        if (pairMap[leftVal] === rightVal) {
+          el.classList.add("matched");
+          matchSelected.el.classList.remove("selected");
+          matchSelected.el.classList.add("matched");
+          matched++;
+          matchScore++;
+          document.getElementById("match-score-text").textContent = `${matchScore} / ${matchTotal}`;
+          if (matched === pairs.length) {
+            document.getElementById("match-result").textContent = "🎉 全部正解！素晴らしい！";
+            document.getElementById("match-result").classList.remove("hidden");
+            document.getElementById("match-next-round").classList.remove("hidden");
+          }
+        } else {
+          el.classList.add("wrong-flash");
+          matchSelected.el.classList.add("wrong-flash");
+          setTimeout(() => { el.classList.remove("wrong-flash"); matchSelected.el.classList.remove("selected","wrong-flash"); }, 600);
+        }
+        matchSelected = null;
+      }
+    });
+    return el;
+  }
+  lefts.forEach(t => leftCol.appendChild(makeItem(t, "L")));
+  rights.forEach(t => rightCol.appendChild(makeItem(t, "R")));
+}
+
+document.getElementById("match-next-round").addEventListener("click", () => {
+  const pairs = currentUnitData ? currentUnitData.matchPairs : UNITS.filter(Boolean).flatMap(u => u.matchPairs);
+  renderMatchRound(shuffle(pairs).slice(0, 6));
+});
+document.getElementById("match-back").addEventListener("click", () => showScreen("home-screen"));
+
+// ══════════════════════════════════════════════════════════
+// SENTENCE BUILD
+// ══════════════════════════════════════════════════════════
+function startBuild(unitData) {
+  const allSentences = unitData
+    ? unitData.sentences.map(s => ({...s, unit: unitData.id, unitColor: unitData.color}))
+    : UNITS.filter(Boolean).flatMap(u => u.sentences.map(s => ({...s, unit: u.id, unitColor: u.color})));
+  buildItems = shuffle(allSentences).slice(0, Math.min(8, allSentences.length));
+  buildIdx = 0; buildScore = 0;
+  renderBuildQ();
+  showScreen("build-screen");
+}
+
+function renderBuildQ() {
+  const item = buildItems[buildIdx];
+  buildAnswer = [];
+  buildBank = shuffle([...item.words]);
+  document.getElementById("build-prog").textContent = `${buildIdx + 1} / ${buildItems.length}`;
+  document.getElementById("build-prog-bar").style.width = `${(buildIdx / buildItems.length) * 100}%`;
+  document.getElementById("build-prompt").textContent = "日本語を英語にしよう：";
+  document.getElementById("build-jp").textContent = item.jp;
+  document.getElementById("build-hint").classList.add("hidden");
+  document.getElementById("build-feedback").classList.add("hidden");
+  document.getElementById("build-check").disabled = true;
+  renderBuildBank(item);
+  renderBuildAnswer();
+}
+
+function renderBuildBank(item) {
+  const bank = document.getElementById("build-bank");
+  bank.innerHTML = "";
+  buildBank.forEach((word, i) => {
+    const chip = document.createElement("button");
+    chip.className = "word-chip" + (buildAnswer.includes(i) ? " used" : "");
+    chip.textContent = word;
+    chip.addEventListener("click", () => {
+      if (chip.classList.contains("used")) return;
+      buildAnswer.push(i);
+      chip.classList.add("used");
+      renderBuildAnswer();
+      document.getElementById("build-check").disabled = buildAnswer.length === 0;
+    });
+    bank.appendChild(chip);
+  });
+}
+
+function renderBuildAnswer() {
+  const row = document.getElementById("build-answer");
+  row.innerHTML = "";
+  if (buildAnswer.length === 0) { row.setAttribute("data-empty","true"); return; }
+  row.setAttribute("data-empty","false");
+  buildAnswer.forEach((bankIdx, pos) => {
+    const chip = document.createElement("button");
+    chip.className = "answer-chip";
+    chip.textContent = buildBank[bankIdx];
+    chip.addEventListener("click", () => {
+      buildAnswer.splice(pos, 1);
+      // Un-use in bank
+      const bankChips = document.getElementById("build-bank").children;
+      bankChips[bankIdx].classList.remove("used");
+      renderBuildAnswer();
+      document.getElementById("build-check").disabled = buildAnswer.length === 0;
+    });
+    row.appendChild(chip);
+  });
+}
+
+document.getElementById("build-check").addEventListener("click", () => {
+  const item = buildItems[buildIdx];
+  const answer = buildAnswer.map(i => buildBank[i]).join(" ");
+  const correct = answer.trim().toLowerCase() === item.words.join(" ").toLowerCase();
+  if (correct) buildScore++;
+  document.getElementById("build-hint").textContent = correct ? `✅ 正解！ "${item.words.join(" ")}"` : `❌ 正解は "${item.words.join(" ")}"`;
+  document.getElementById("build-hint").style.background = correct ? "#E8F5E9" : "#FFF3E0";
+  document.getElementById("build-hint").style.borderColor = correct ? "#A5D6A7" : "#FFE082";
+  document.getElementById("build-hint").style.color = correct ? "#2E7D32" : "#E65100";
+  document.getElementById("build-hint").classList.remove("hidden");
+  document.getElementById("build-fb-icon").textContent = correct ? "⭕ 正解！" : "❌ もう一度";
+  document.getElementById("build-feedback").classList.remove("hidden");
+  document.getElementById("build-check").disabled = true;
+});
+
+document.getElementById("build-next").addEventListener("click", () => {
+  buildIdx++;
+  if (buildIdx >= buildItems.length) showReview("build");
+  else renderBuildQ();
+});
+document.getElementById("build-back").addEventListener("click", () => showScreen("home-screen"));
+
+// ══════════════════════════════════════════════════════════
+// REVIEW SCREEN
+// ══════════════════════════════════════════════════════════
+async function showReview(type) {
+  const score = type === "quiz" ? qScore : buildScore;
+  const total = type === "quiz" ? qItems.length : buildItems.length;
+  const pct = total > 0 ? Math.round((score / total) * 100) : 0;
+  const grade = pct >= 90 ? "🌟 すばらしい！" : pct >= 70 ? "👍 よくできました！" : pct >= 50 ? "😊 もう少し！" : "💪 練習しよう！";
+
+  document.getElementById("rv-pct").textContent = pct + "%";
+  document.getElementById("rv-grade").textContent = grade;
+  document.getElementById("rv-correct").textContent = score;
+  document.getElementById("rv-wrong").textContent = total - score;
+  document.getElementById("rv-total").textContent = total;
+
+  // Save to Supabase
+  const syncDiv = document.getElementById("rv-sync");
+  syncDiv.innerHTML = "";
+  syncDiv.classList.remove("hidden");
+  if (currentUser) {
+    const unitId = currentUnitData ? currentUnitData.id : 0;
+    const saved = await saveResultToSupabase(type, unitId, score, total);
+    syncDiv.innerHTML = saved
+      ? `<div class="sync-banner">☁️ 成績をクラウドに保存しました！</div>`
+      : `<div class="sync-banner error">⚠️ 保存に失敗しました。後でもう一度お試しください。</div>`;
+    if (saved) loadUserStats();
+  } else {
+    syncDiv.innerHTML = `<div class="sync-banner error" style="cursor:pointer" id="rv-login-prompt">🔑 ログインして成績を保存しましょう！</div>`;
+    document.getElementById("rv-login-prompt")?.addEventListener("click", openAuthModal);
+  }
+
+  // Result list (quiz only)
+  const rvList = document.getElementById("rv-list");
+  rvList.innerHTML = "";
+  if (type === "quiz") {
+    qResults.forEach((r, i) => {
+      const div = document.createElement("div");
+      div.className = "result-row";
+      div.innerHTML = `<div class="result-q">${i+1}. ${r.item.emoji} ${r.item.en}</div>
+        <div class="result-ans" style="color:${r.correct ? '#2E7D32' : '#c62828'}">${r.correct ? "✅ " : "❌ "}${r.item.jp}${!r.correct ? ` (あなたの答え: ${r.chosen})` : ""}</div>`;
+      rvList.appendChild(div);
+    });
+  }
+
+  showScreen("review-screen");
+}
+
+document.getElementById("rv-retry").addEventListener("click", () => {
+  if (currentActivity === "quiz")  startQuiz(currentUnitData);
+  if (currentActivity === "build") startBuild(currentUnitData);
+  if (currentActivity === "match") startMatch(currentUnitData);
+});
+document.getElementById("rv-menu").addEventListener("click", () => showScreen("home-screen"));
+
+// ══════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════
+renderHome();
+
+// Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js')
+    .then(r => console.log('[LT1] SW:', r.scope))
+    .catch(e => console.warn('[LT1] SW fail:', e));
+}
+</script>
+</body>
+</html>
